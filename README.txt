@@ -10,5 +10,7 @@ u"Everything's Chimpy!"
 API parameters must be passed by name. For example:
 >>> mailchimp_api.listMemberInfo(id='YOUR LIST ID', email_address='name@example.com')
 
+Requires Python 2.6 or later.
+
 [ MailChimp API v1.3 documentation ]
 http://www.mailchimp.com/api/1.3/

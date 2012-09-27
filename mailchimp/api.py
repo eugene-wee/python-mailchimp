@@ -7,6 +7,10 @@ except ImportError:
 
 
 class MailChimpError(Exception):
+    """
+    Exception raised when an MailChimp API call fails either due to a network
+    related error or for a MailChimp specific reason.
+    """
     def __init__(self, error, code=None):
         self.error = error
         self.code = code
@@ -32,21 +36,27 @@ class MailChimpError(Exception):
 
 
 class MailChimp(object):
-    def __init__(self, apikey='', extra_params={}):
+    def __init__(self, apikey="", **extra_params):
         """
-            Cache API key and address.
+        Create the MailChimp API object.
         """
+        # Cache API key and API server address:
         self.apikey = apikey
 
         self.default_params = {"apikey": apikey}
         self.default_params.update(extra_params)
 
-        dc = "us1"
-        if "-" in self.apikey:
-            dc = self.apikey.split('-')[1]
-        self.base_api_url = "https://%s.api.mailchimp.com/1.3/?method=" % dc
+        server = self.apikey.split("-")[1] if ("-" in self.apikey) else "us1"
+        self.base_api_url = (
+            "https://{server}.api.mailchimp.com/1.3/?method=".format(
+                server=server,
+            )
+        )
 
-    def call(self, method, params={}):
+    def call(self, method, **params):
+        """
+        Call the API method provided with the parameters supplied.
+        """
         url = self.base_api_url + method
         all_params = self.default_params.copy()
         all_params.update(params)
@@ -58,18 +68,28 @@ class MailChimp(object):
             response = urllib2.urlopen(request)
             response_content = response.read()
         except urllib2.HTTPError as e:
-            raise MailChimpError("HTTP {code}".format(code=e.code))
+            raise MailChimpError(u"HTTP {code}".format(code=e.code))
+        except urllib2.URLError as e:
+            raise MailChimpError(unicode(e))
 
-        result = json.loads(response_content)
+        try:
+            result = json.loads(response_content)
+        except ValueError as e:
+            raise MailChimpError(
+                u"Invalid response from MailChimp: {0}".format(e),
+            )
         if isinstance(result, dict) and "code" in result and "error" in result:
             raise MailChimpError(error=result["error"], code=result["code"])
         return result
 
     def __getattr__(self, method_name):
-
+        """
+        Enable the calling of MailChimp API methods through Python method calls
+        of the same name.
+        """
         def get(self, *args, **kwargs):
-            params = dict((i, j) for (i, j) in enumerate(args))
+            params = dict(enumerate(args))
             params.update(kwargs)
-            return self.call(method_name, params)
+            return self.call(method_name, **params)
 
         return get.__get__(self)
