@@ -1,4 +1,4 @@
-from api import MailChimp, MailChimpError
+from .api import MailChimp, MailChimpError
 # Silence potential warnings from static analysis tools:
 assert MailChimp
 assert MailChimpError
