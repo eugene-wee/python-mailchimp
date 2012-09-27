@@ -15,7 +15,7 @@ CLASSIFIERS = [
 
 KEYWORDS = 'mailchimp api wrapper 1.3'
 
-setup(name='mailchimp',
+setup(name='python-mailchimp',
       version=mailchimp.__version__,
       description="""MailChimp API v1.3 wrapper for Python.""",
       author=mailchimp.__author__,
