@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from setuptools import setup, find_packages
 
-import mailsnake
+import mailchimp
 
 CLASSIFIERS = [
     'Development Status :: 5 - Production/Stable',
@@ -15,16 +15,14 @@ CLASSIFIERS = [
 
 KEYWORDS = 'mailchimp api wrapper 1.3'
 
-
-setup(name = 'mailsnake',
-    version = mailsnake.__version__,
-    description = """MailChimp API v1.3 wrapper for Python.""",
-    author = mailsnake.__author__,
-    url = "https://github.com/leftium/mailsnake",
-    packages = find_packages(),
-    download_url = "http://pypi.python.org/pypi/mailsnake/",
-    classifiers = CLASSIFIERS,
-    keywords = KEYWORDS,
-    zip_safe = True,
-    install_requires=['distribute']
-)
+setup(name='mailchimp',
+      version=mailchimp.__version__,
+      description="""MailChimp API v1.3 wrapper for Python.""",
+      author=mailchimp.__author__,
+      url='https://github.com/eugene-wee/python-mailchimp',
+      packages=find_packages(),
+      download_url='https://github.com/eugene-wee/python-mailchimp/tarball/master',
+      classifiers=CLASSIFIERS,
+      keywords=KEYWORDS,
+      zip_safe=True,
+      install_requires=['distribute'])
